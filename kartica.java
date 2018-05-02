@@ -13,8 +13,8 @@ public class kartica extends JButton {
 	 * x. Params: int idKartica Pre: / Post: / Result: / Env: -
 	 **/
 
-	public void setId(int idKartica) {
-		this.idKartica = idKartica;
+	public void setId(Object value) {
+		this.idKartica = (int) value;
 	}
 
 	/**

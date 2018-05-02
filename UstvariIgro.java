@@ -1,12 +1,17 @@
-
 import java.awt.Dimension;
+import java.io.FileNotFoundException;
+
 import javax.swing.JFrame;
+
+
+
+
 
 public class UstvariIgro extends JFrame  {
 
 	private static final long serialVersionUID = 1L;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 
 		Polje UstvariIgro = new Polje();
 		UstvariIgro.setPreferredSize(new Dimension(500,500));
@@ -15,4 +20,6 @@ public class UstvariIgro extends JFrame  {
 		UstvariIgro.pack();
 		UstvariIgro.setVisible(true);
 	}
+
+
 }
