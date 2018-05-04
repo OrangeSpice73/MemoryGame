@@ -1,15 +1,19 @@
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 public class Polje extends JFrame {
 
@@ -24,33 +28,21 @@ public class Polje extends JFrame {
 	private int score = 0;
 	ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 
-	Polje() throws FileNotFoundException {
+
+	Polje(){
 	
-		
-		//Z JOptionPane vprasamo uporabnika koliko parov ?eli imeti v igri 
-		
 		String userInput = JOptionPane.showInputDialog("Vpiste poljubno stevilo parov!");
 		int stParov = Integer.parseInt(userInput);
-
-		
 		ArrayList<kartica> seznamKartic = new ArrayList<kartica>();
-
 
 		for (int x = 0; x < stParov; x++) {
 			karticaValue.add(x);
 			karticaValue.add(x);
-			System.out.println(x);
-
 		}
-		
-		/* Collections.shuffle nakljucno pomeva vse kartice po polju */
+
 		Collections.shuffle(karticaValue);
 		System.out.println(karticaValue);
 
-		/*
-		 * V tej zanki vsaki ustvarjeni kartici dodamo vrednost(int) in jo dodamo na
-		 * seznam seznamKartic
-		 */
 		for (int value : karticaValue) {
 			kartica cards = new kartica();
 			cards.setId(value);
@@ -65,7 +57,6 @@ public class Polje extends JFrame {
 
 		this.cards = seznamKartic;
 
-		/* Nastavimo koliko casa so kartice odkrite */
 		delay = new Timer(200, new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
@@ -77,16 +68,79 @@ public class Polje extends JFrame {
 			}
 		});
 		delay.setRepeats(false);
-
-		Container panel = getContentPane();
-		panel.setLayout(new GridLayout(3, 4));
-        for (kartica c:cards){
-            panel.add(c);
+		
+		/*Main frame*/
+		JFrame mainFrame = new JFrame();
+		mainFrame.setTitle("Memory Game");
+		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		mainFrame.setVisible(true);
+		mainFrame.setSize(450, 450);
+		JPanel gamePanel = new JPanel();
+		gamePanel.setLayout(new GridLayout(3,4));
+		mainFrame.add(gamePanel);
+		
+		for (kartica c:cards){
+            gamePanel.add(c);
         }
-        setTitle("IGRA SPOMINA 2018");
+		
+		Panel p = new Panel();
+	    p.setLayout(new BorderLayout());
+	    JButton SaveButton = new JButton("Save Game");
+	    SaveButton.setSize(50, 50);
+	    JButton LoadButton = new JButton("Load Game");
+	    LoadButton.setSize(50, 50);
+	    p.add(SaveButton, BorderLayout.SOUTH);
+	    p.add(LoadButton, BorderLayout.EAST);
+	    mainFrame.add(p);
 
+		SaveButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					File f = new File("Saved.txt");
+					if(f.exists()) { f.delete();}
+				
+					PrintWriter writer = null;
+					try {
+						writer = new PrintWriter(new File("Saved.txt"));
+					} catch (FileNotFoundException e1) {
+						System.out.println("Error");
+						e1.printStackTrace();
+					}
+
+				for (Integer aKarticaValue : karticaValue) {
+			        writer.println(aKarticaValue);
+			    }
+				writer.close();
+				}		
+		});
+		
+		LoadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(new FileReader("Saved.txt"));
+				Polje loading = new Polje();
+				for (int i = 0; i < loading.karticaValue.size(); i++) {
+					loading.karticaValue.remove(i);
+				}
+				Serializable line = null;
+				
+				while (line != null) {
+					line = br.readLine();
+				
+				}
+				karticaValue.add((Integer) line);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally {
+				
+			}
+			}
+			
+		});
+		
 	}
-
 	/**
 	 * Desc: Metoda dodeli vsaki kartici ?tevilko po kateri jo prepoznamo. Params: /
 	 * Pre: card1.getId()==card2.getId() Post: card1!=null && card1 !=izbranaKartica
@@ -143,6 +197,12 @@ public class Polje extends JFrame {
 		card2 = null;
 	}
 
+
+	private void SaveFile(ArrayList<Integer> karticaValue2) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * Desc: Metoda preveri vsako kartico, ?e ima svoj par(true). V primeru da je
 	 * true, je igre konec,saj so vsi pari najdeni. Params: / Pre: / Post: / Result:
@@ -163,7 +223,7 @@ public class Polje extends JFrame {
 	 * @throws FileNotFoundException 
 	 * 
 	 */
-	private void SaveFile(ArrayList<Integer> karticaValue) throws FileNotFoundException{
+/**private void SaveFile() throws FileNotFoundException{
 		
 		File f = new File("Saved.txt");
 		if(f.exists()) { f.delete();}
@@ -174,26 +234,20 @@ public class Polje extends JFrame {
         writer.println(aKarticaValue);
     }
 	writer.close();
-	}
+	}**/
 
-public void LoadFile(){
+/**private void LoadFile() throws IOException{
+	try (BufferedReader br = new BufferedReader(new FileReader(getName()))) { 
+		Serializable line = br.readLine(); 
+		while (line != null) {
+		line = br.readLine();
+		karticaValue.add((Integer) line);
+		}
+		} catch (IOException e) { e.printStackTrace(); }
+		br.close();
 	
-	try{
-		{
-	    Scanner s = new Scanner(new File("Saved.txt"));
-	    ArrayList<Integer> karticaValue = new ArrayList<Integer>();
-	    while (s.hasNext()){
-	        if(s.hasNextInt()){
-	            karticaValue.add(s.nextInt());
-	            s.nextLine();
-	        	}
-	    	}
-	    s.close();
-	    }
 	}
-		catch(Exception exc){
-			exc.printStackTrace();
-			}
+**/
 }
 
-}
+
