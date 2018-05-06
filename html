@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Memory Game</title>
+</head>
+<body id = "body">
+<style>
+.tile{
+	width: 150px;
+	/*height: 150px;*/
+	background-color: black;
+	padding: 1px solid black;
+	float: left;
+	margin: 10px;
+	font-size: 100px;
+	padding-top: 25px;
+	padding-bottom: 25px;
+	text-align: center;
+
+}
+
+p{
+	font-size: 50px;
+}
+
+span{
+	visibility: hidden;
+}
+</style>
+
+
+<button type="button" onclick="turnBlue();">Colour scheme 1</button>
+<button type="button" onclick="turnColourful();">Colour scheme 2</button>
+<button type="button" onclick="turnDull();">Colour scheme 3</button>
+<br>
+<button type="button" onclick="Cirilica();">Cirilica</button>
+<button type="button" onclick="Kitajscina();">Kitajscina</button>
+<button type="button" onclick="Japanscina();">Japonscina</button>
+
+
+
+<div id="game_board">
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">A</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">A</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">B</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">B</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">C</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">C</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">D</span></div>
+	<div class="tile" id="tileDiv" onclick="flipTile(this);"><span id="spanDiv">D</span></div>
+</div>
+
+
+<script>
+
+		var body_bg = ['#525564','#f37338','#eecd86'];
+		var tile_bg = ['#74828f','#fdb632','#b95835'];
+		var font_colour = ['#beb9b5','#c22326','#b95835'];
+	
+	function turnBlue() {
+		var body = document.getElementById("body");
+		var div = document.getElementById("tileDiv");
+		var span = document.getElementById("spanDiv");
+			body.style.backgroundColor = body_bg[0];
+			div.style.backgroundColor = tile_bg[0];
+			span.style.backgroundColor = font_colour[0];
+	}
+
+	function turnColourful() {
+		var div = document.getElementById('tileDiv');
+		var span = document.getElementById('spanDiv');
+			body.style.backgroundColor = body_bg[1];
+			div.style.backgroundColor = tile_bg[1];
+			span.style.backgroundColor = font_colour[1];
+	}
+	
+	function turnDull() {
+		var div = document.getElementById('tileDiv');
+		var span = document.getElementById('spanDiv');
+			body.style.backgroundColor = body_bg[2];
+			div.style.backgroundColor = tile_bg[2];
+			span.style.backgroundColor = font_colour[2];
+	}
+	
+		var memory_tiles = [];
+		var memory_array = ["A", "A", "B", "B","C", "C", "D", "D","E", "E", "F", "F","G", "G", "I", "I","a","a","b","b","c","c","d","d","e","e","g","g","h","h","f","f","i","i"];
+		
+
+		var memory_tile_tmp = null;
+		var can_play = true;
+	
+	/***Cirilica******/
+	function Cirilica(){
+		var output = '';
+			memory_array = [];
+			memory_array = ["&#x410","&#x410","&#x411","&#x411","&#1063","&#1063","&#1044","&#1044","&#x415","&#x415","&#x424","&#x424","&#1043","&#1043","&#x438","&#x438"];
+
+	memory_array = memory_tile_shuffle(memory_array);
+
+	for(var x = 0; x < memory_array.length; x++){
+	 output = output + '<div class="tile" onclick="flipTile(this)"><span>' + memory_array[x] + '</span> </div>';
+	 }
+	 document.getElementById('game_board').innerHTML = output;
+
+	}
+	/***Kitajscina******/
+	function Kitajscina(){
+		var output = '';
+			memory_array = [];
+			memory_array = ["&#35830","&#27604","&#35199","&#36842","&#20234","&#21513","&#33406","&#26480","&#24320","&#21734","&#23617","&#25552","&#32500","&#35830","&#27604","&#35199","&#36842","&#20234","&#21513","&#33406","&#26480","&#24320","&#21734","&#23617","&#25552","&#32500"];
+
+	memory_array = memory_tile_shuffle(memory_array);
+
+	for(var x = 0; x < memory_array.length; x++){
+	 output = output + '<div class="tile" onclick="flipTile(this)"><span>' + memory_array[x] + '</span> </div>';
+	 }
+	 document.getElementById('game_board').innerHTML = output;
+
+	}
+	
+	/***Japonscina******/
+	function Japanscina(){
+		var output = '';
+			memory_array = [];
+			memory_array = [];
+
+	memory_array = memory_tile_shuffle(memory_array);
+
+	for(var x = 0; x < memory_array.length; x++){
+	 output = output + '<div class="tile" onclick="flipTile(this)"><span>' + memory_array[x] + '</span> </div>';
+	 }
+	 document.getElementById('game_board').innerHTML = output;
+
+	}
+
+	function memory_tile_shuffle(array){
+	    var i = array.length, j, temp;
+	    while(--i > 0){
+	        j = Math.floor(Math.random() * (i+1));
+	        temp = array[j];
+	        array[j] = array[i];
+	        array[i] = temp;
+	    }
+		return array;
+	}
+	
+
+	function newBoard(){
+		var output = '';
+	    memory_array=memory_tile_shuffle(memory_array);
+		console.log("memory_array "+memory_array);
+		for(var i = 0; i < memory_array.length; i++){
+			output += '<div class="tile" onclick="flipTile(this)"><span>'+memory_array[i]+'</span></div>';
+		}
+		document.getElementById('game_board').innerHTML = output;
+		console.log(output);
+	}
+
+	newBoard();
+	console.log(memory_array);
+	function flipTile(tile){
+		
+		if(memory_tiles.length == 0){
+			tile.firstChild.style.visibility="visible";
+			tile.style.backgroundColor = "grey";
+			memory_tile_tmp = tile;	
+			memory_tiles.push(tile);
+		}else if(memory_tiles.length == 1 && memory_tiles[0]!= tile){
+			memory_tiles.push(tile);
+			tile.firstChild.style.visibility="visible";
+			tile.style.backgroundColor = "grey";
+				
+			if(memory_tiles[0].firstChild.innerHTML == memory_tiles[1].firstChild.innerHTML){
+				memory_tiles = [];
+			}else{
+				setTimeout(function(){ 
+					memory_tiles[0].firstChild.style.visibility="hidden";
+					memory_tiles[0].style.backgroundColor = "black";
+					memory_tiles[1].firstChild.style.visibility="hidden";
+					memory_tiles[1].style.backgroundColor = "black";
+					memory_tiles = [];
+					}, 
+				1000);
+			}
+		}
+		
+
+	}
+	
+
+
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
