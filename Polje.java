@@ -5,15 +5,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Polje extends JFrame {
 
@@ -74,7 +72,7 @@ public class Polje extends JFrame {
 		mainFrame.setTitle("Memory Game");
 		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
-		mainFrame.setSize(450, 450);
+		mainFrame.setSize(600, 500);
 		JPanel gamePanel = new JPanel();
 		gamePanel.setLayout(new GridLayout(3,4));
 		mainFrame.add(gamePanel);
@@ -92,7 +90,8 @@ public class Polje extends JFrame {
 	    p.add(SaveButton, BorderLayout.SOUTH);
 	    p.add(LoadButton, BorderLayout.EAST);
 	    mainFrame.add(p);
-
+	    
+	    
 		SaveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					File f = new File("Saved.txt");
@@ -115,26 +114,25 @@ public class Polje extends JFrame {
 		
 		LoadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			BufferedReader br = null;
 			try {
-				br = new BufferedReader(new FileReader("Saved.txt"));
-				Polje loading = new Polje();
-				for (int i = 0; i < loading.karticaValue.size(); i++) {
-					loading.karticaValue.remove(i);
+				System.out.println(karticaValue);
+				for (int i = 0; i <karticaValue.size(); i++) {
+					karticaValue.remove(i);
 				}
-				Serializable line = null;
 				
-				while (line != null) {
-					line = br.readLine();
-				
-				}
-				karticaValue.add((Integer) line);
+			        Scanner vnos = new Scanner(new File("Saved.txt"));
+			        String a = vnos.next();
+			        ArrayList<Integer> karticaValue = new ArrayList<Integer>();
+			        for (int i = 0; i <karticaValue.size(); i++) {
+						karticaValue.add(Integer.parseInt(a));
+					}
+			        vnos.close();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			finally {
-				
+				new Polje();
 			}
 			}
 			
