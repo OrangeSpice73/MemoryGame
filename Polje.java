@@ -101,11 +101,11 @@ public class Polje extends JFrame {
 
 			LoadButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					karticaValue.clear();
 					try {
 
-						karticaValue.clear();
 						Scanner vnos = new Scanner(new File("Saved.txt"));
-						String a = vnos.nextLine();
+						String a = vnos.next();
 						ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 						for (int i = 0; i < karticaValue.size(); i++) {
 							karticaValue.add(Integer.parseUnsignedInt(a));
@@ -117,7 +117,7 @@ public class Polje extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} finally {
-
+						new Polje(true);
 					}
 				}
 
@@ -158,7 +158,7 @@ public class Polje extends JFrame {
 			mainFrame.setSize(600, 500);
 			JPanel gamePanel = new JPanel();
 			gamePanel.setLayout(new GridLayout(4,4,3,3));
-
+			cards.removeAll(cards);
 			for (kartica c : cards) {
 				gamePanel.add(c);
 			}
@@ -210,6 +210,7 @@ public class Polje extends JFrame {
 						}
 						System.out.println(karticaValue.toString());
 						vnos.close();
+						System.out.println("I clicked loading buttons");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
