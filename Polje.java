@@ -24,11 +24,11 @@ public class Polje extends JFrame {
 	private Timer delay;
 	private int clickCounter = 0;
 	private int score = 0;
-	ArrayList<Integer> karticaValue = new ArrayList<Integer>();
+	private ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 
 
 	Polje(boolean load){
-	
+	if(load == false){
 		String userInput = JOptionPane.showInputDialog("Vpiste poljubno stevilo parov!");
 		int stParov = Integer.parseInt(userInput);
 		ArrayList<kartica> seznamKartic = new ArrayList<kartica>();
@@ -37,7 +37,7 @@ public class Polje extends JFrame {
 			karticaValue.add(x);
 			karticaValue.add(x);
 		}
-		if(!load) Collections.shuffle(karticaValue);
+		Collections.shuffle(karticaValue);
 		
 		System.out.println(karticaValue);
 
@@ -55,17 +55,7 @@ public class Polje extends JFrame {
 
 		this.cards = seznamKartic;
 
-		delay = new Timer(200, new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				try {
-					cekirajKartice(karticaValue);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		delay.setRepeats(false);
+
 		
 		/*Main frame*/
 		JFrame mainFrame = new JFrame();
@@ -115,7 +105,7 @@ public class Polje extends JFrame {
 		LoadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			try {	
-				System.out.println(karticaValue);
+
 					karticaValue.clear();	
 			        Scanner vnos = new Scanner(new File("Saved.txt"));
 			        String a = vnos.next();
@@ -124,6 +114,7 @@ public class Polje extends JFrame {
 						karticaValue.add(Integer.parseInt(a));
 					}
 			        System.out.println(karticaValue.toString());
+					System.out.println(karticaValue);
 			        vnos.close();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -136,7 +127,128 @@ public class Polje extends JFrame {
 			
 		});
 		
+		delay = new Timer(200, new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				try {
+					cekirajKartice(karticaValue);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		delay.setRepeats(false);
+	
 	}
+	else if(load == true){
+		for (int value : karticaValue) {
+			kartica cards = new kartica();
+			cards.setId(value);
+			cards.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ae) {
+					izbranaKartica = cards;
+					obrniJih();
+				}
+			});
+			seznamKartic.add(cards);
+		}
+
+		this.cards = seznamKartic;
+
+
+		
+		/*Main frame*/
+		JFrame mainFrame = new JFrame();
+		mainFrame.setTitle("Memory Game");
+		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		mainFrame.setVisible(true);
+		mainFrame.setSize(600, 500);
+		JPanel gamePanel = new JPanel();
+		gamePanel.setLayout(new GridLayout(3,4));
+		mainFrame.add(gamePanel);
+		
+		for (kartica c:cards){
+            gamePanel.add(c);
+        }
+		
+		Panel p = new Panel();
+	    p.setLayout(new BorderLayout());
+	    JButton SaveButton = new JButton("Save Game");
+	    SaveButton.setSize(50, 50);
+	    JButton LoadButton = new JButton("Load Game");
+	    LoadButton.setSize(50, 50);
+	    p.add(SaveButton, BorderLayout.SOUTH);
+	    p.add(LoadButton, BorderLayout.EAST);
+	    mainFrame.add(p);
+	    
+	    
+		SaveButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					File f = new File("Saved.txt");
+					if(f.exists()) { f.delete();}
+				
+					PrintWriter writer = null;
+					try {
+						writer = new PrintWriter(new File("Saved.txt"));
+					} catch (FileNotFoundException e1) {
+						System.out.println("Error");
+						e1.printStackTrace();
+					}
+
+				for (Integer aKarticaValue : karticaValue) {
+			        writer.println(aKarticaValue);
+			    }
+				writer.close();
+				}		
+		});
+		
+		LoadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			try {	
+
+					karticaValue.clear();	
+			        Scanner vnos = new Scanner(new File("Saved.txt"));
+			        String a = vnos.next();
+			        ArrayList<Integer> karticaValue = new ArrayList<Integer>();
+			        for (int i = 0; i <karticaValue.size(); i++) {
+						karticaValue.add(Integer.parseInt(a));
+					}
+			        System.out.println(karticaValue.toString());
+					System.out.println(karticaValue);
+			        vnos.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally {
+				new Polje(true);
+			}
+			}
+			
+		});
+		
+		delay = new Timer(200, new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				try {
+					cekirajKartice(karticaValue);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		delay.setRepeats(false);
+	
+		}
+	else{
+		System.out.println("Napaka");
+		System.out.println("Napaka");
+		System.out.println("Napaka");
+		System.out.println("Napaka");
+	}
+	}
+	
+
 	/**
 	 * Desc: Metoda dodeli vsaki kartici ?tevilko po kateri jo prepoznamo. Params: /
 	 * Pre: card1.getId()==card2.getId() Post: card1!=null && card1 !=izbranaKartica
@@ -157,6 +269,8 @@ public class Polje extends JFrame {
 		}
 		clickCounter++;
 	}
+	
+	
 
 	/**
 	 * Desc: Metoda preveri ?e se kartici ujemata. Params: / Pre:
@@ -212,6 +326,8 @@ public class Polje extends JFrame {
 		}
 		return true;
 	}
+	
+	
 
 	/**
 	 *
@@ -245,5 +361,8 @@ public class Polje extends JFrame {
 	}
 **/
 }
+
+
+
 
 
