@@ -6,6 +6,7 @@ public class kartica extends JButton {
 
 	private int idKartica;
 
+
 	private boolean seUjema;
 
 	/**
@@ -25,6 +26,7 @@ public class kartica extends JButton {
 	public int getId() {
 		return this.idKartica;
 	}
+	
 
 	/**************************************************/
 	/**

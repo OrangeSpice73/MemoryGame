@@ -16,8 +16,8 @@ import java.util.Scanner;
 public class Polje extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<kartica> cards;
-	public ArrayList<kartica> seznamKartic;
+	public	ArrayList<kartica> cards;
+	public 	ArrayList<kartica> seznamKartic;
 	private kartica izbranaKartica;
 	private kartica card1;
 	private kartica card2;
@@ -26,20 +26,17 @@ public class Polje extends JFrame {
 	private int score = 0;
 	ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 
-
 	Polje(boolean load){
-		if(load == false) {
 	
 		String userInput = JOptionPane.showInputDialog("Vpiste poljubno stevilo parov!");
 		int stParov = Integer.parseInt(userInput);
 		ArrayList<kartica> seznamKartic = new ArrayList<kartica>();
-
 		for (int x = 0; x < stParov; x++) {
 			karticaValue.add(x);
 			karticaValue.add(x);
-			}
-		Collections.shuffle(karticaValue);	
-
+		}
+		Collections.shuffle(karticaValue);
+		
 		System.out.println(karticaValue);
 
 		for (int value : karticaValue) {
@@ -53,51 +50,9 @@ public class Polje extends JFrame {
 			});
 			seznamKartic.add(cards);
 		}
-
 		this.cards = seznamKartic;
-		}
-		else {
-			for (int value : karticaValue) {
-				kartica cards = new kartica();
-				cards.setId(value);
-				cards.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent ae) {
-						izbranaKartica = cards;
-						obrniJih();
-					}
-				});
-				seznamKartic.add(cards);
-			}
-		}
-		/*Main frame*/
-		JFrame mainFrame = new JFrame();
-		mainFrame.setTitle("Memory Game");
-		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		mainFrame.setVisible(true);
-		mainFrame.setSize(600, 500);
-		JPanel gamePanel = new JPanel();
-		gamePanel.setLayout(new GridLayout(3,4));
-		mainFrame.add(gamePanel);
-		
-		if(load == false) {
-			for (kartica c:cards){
-				gamePanel.add(c);
-			}
-		}
-			else {
-				
-			}
-		
-		Panel p = new Panel();
-	    p.setLayout(new BorderLayout());
-	    JButton SaveButton = new JButton("Save Game");
-	    SaveButton.setSize(50, 50);
-	    JButton LoadButton = new JButton("Load Game");
-	    LoadButton.setSize(50, 50);
-	    p.add(SaveButton, BorderLayout.SOUTH);
-	    p.add(LoadButton, BorderLayout.EAST);
-	    mainFrame.add(p);
-	    
+	
+	
 		delay = new Timer(200, new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
@@ -108,8 +63,34 @@ public class Polje extends JFrame {
 				}
 			}
 		});
-		delay.setRepeats(false); 
+		delay.setRepeats(false);
+	
+
+		/*Main frame*/
+		JFrame mainFrame = new JFrame();
+		mainFrame.setTitle("Memory Game");
+		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		mainFrame.setVisible(true);
+		mainFrame.setSize(600, 500);
+		JPanel gamePanel = new JPanel();
+		gamePanel.setLayout(new GridLayout(4,5));
+
 		
+		for (kartica c:cards){
+            gamePanel.add(c);
+		}	
+		mainFrame.add(gamePanel);
+		Panel p = new Panel();
+	    p.setLayout(new BorderLayout());
+	    JButton SaveButton = new JButton("Save Game");
+	    SaveButton.setSize(50, 50);
+	    JButton LoadButton = new JButton("Load Game");
+	    LoadButton.setSize(50, 50);
+	    p.add(SaveButton, BorderLayout.SOUTH);
+	    p.add(LoadButton, BorderLayout.EAST);
+	    mainFrame.add(p);
+	    
+	
 		SaveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					File f = new File("Saved.txt");
@@ -132,24 +113,26 @@ public class Polje extends JFrame {
 		
 		LoadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			try {
+				try {
+			        Scanner vnos;
 
-					karticaValue.clear();
-			        Scanner vnos = new Scanner(new File("Saved.txt"));
-			        String a = vnos.next();
-			        ArrayList<Integer> karticaValue = new ArrayList<Integer>();
+						vnos = new Scanner(new File("Saved.txt"));
+
+			        String a = vnos.nextLine();
 			        for (int i = 0; i <karticaValue.size(); i++) {
+			        	karticaValue.remove(i);
 						karticaValue.add(Integer.parseInt(a));
 					}
-					System.out.println(karticaValue);
+			        System.out.println(karticaValue);
 			        vnos.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			finally {
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					finally{
 				new Polje(true);
-			}
-			}
+					}
+				}
 			
 		});
 		
@@ -198,7 +181,6 @@ public class Polje extends JFrame {
 				JOptionPane.showMessageDialog(this, "Cestitke,zmagali ste!");
 				JOptionPane.showMessageDialog(this, "Ctevilo premikov: " + clickCounter);
 				JOptionPane.showMessageDialog(this, "Vas rezultat je: " + score);
-				SaveFile(karticaValue);
 				System.exit(0);
 			}
 		} else {
@@ -210,11 +192,6 @@ public class Polje extends JFrame {
 		card2 = null;
 	}
 
-
-	private void SaveFile(ArrayList<Integer> karticaValue2) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/**
 	 * Desc: Metoda preveri vsako kartico, ?e ima svoj par(true). V primeru da je
@@ -230,37 +207,6 @@ public class Polje extends JFrame {
 		return true;
 	}
 
-	/**
-	 *
-	 * @param karticaValue
-	 * @throws FileNotFoundException 
-	 * 
-	 */
-/**private void SaveFile() throws FileNotFoundException{
-		
-		File f = new File("Saved.txt");
-		if(f.exists()) { f.delete();}
-	
-		PrintWriter writer = new PrintWriter(new File("Saved.txt"));
-
-	for (Integer aKarticaValue : karticaValue) {
-        writer.println(aKarticaValue);
-    }
-	writer.close();
-	}**/
-
-/**private void LoadFile() throws IOException{
-	try (BufferedReader br = new BufferedReader(new FileReader(getName()))) { 
-		Serializable line = br.readLine(); 
-		while (line != null) {
-		line = br.readLine();
-		karticaValue.add((Integer) line);
-		}
-		} catch (IOException e) { e.printStackTrace(); }
-		br.close();
-	
-	}
-**/
 }
 
 
