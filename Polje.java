@@ -24,7 +24,7 @@ public class Polje extends JFrame {
 	private Timer delay;
 	private int clickCounter = 0;
 	private int score = 0;
-	private ArrayList<Integer> karticaValue = new ArrayList<Integer>();
+	private	ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 
 	Polje(boolean load) {
 		if (load == false) {
@@ -101,134 +101,37 @@ public class Polje extends JFrame {
 
 			LoadButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					karticaValue.clear();
+					int size = karticaValue.size();
+					
+					karticaValue.removeAll(karticaValue);
+					System.out.println("Cleared arraylist"+karticaValue);
 					try {
-
+						System.out.println("Starting!!");
 						Scanner vnos = new Scanner(new File("Saved.txt"));
 						String a = vnos.next();
-						ArrayList<Integer> karticaValue = new ArrayList<Integer>();
-						for (int i = 0; i < karticaValue.size(); i++) {
-							karticaValue.add(Integer.parseUnsignedInt(a));
+						System.out.println(size);
+						
+						for (int i = 0; i < size; i++) {
+						karticaValue.add(Integer.parseInt(a));
 						}
-						System.out.println(karticaValue.toString());
 						System.out.println(karticaValue);
+
 						vnos.close();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} finally {
-						new Polje(true);
-					}
-				}
-
-			});
-
-			delay = new Timer(200, new ActionListener() {
-				public void actionPerformed(ActionEvent ae) {
-					try {
-						cekirajKartice(karticaValue);
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			delay.setRepeats(false);
-
-		} else if (load == true) {
-			for (int value : karticaValue) {
-				kartica cards = new kartica();
-				cards.setId(value);
-				cards.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent ae) {
-						izbranaKartica = cards;
-						obrniJih();
-					}
-				});
-				seznamKartic.add(cards);
-			}
-
-			this.cards = seznamKartic;
-
-			/* Main frame */
-			JFrame mainFrame = new JFrame();
-			mainFrame.setTitle("Memory Game");
-			mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-			mainFrame.setVisible(true);
-			mainFrame.setSize(600, 500);
-			JPanel gamePanel = new JPanel();
-			gamePanel.setLayout(new GridLayout(4,4,3,3));
-			cards.removeAll(cards);
-			for (kartica c : cards) {
-				gamePanel.add(c);
-			}
-
-			mainFrame.add(gamePanel);
-			Panel p = new Panel();
-			p.setLayout(new BorderLayout());
-			JButton SaveButton = new JButton("Save Game");
-			JButton LoadButton = new JButton("Load Game");
-			p.add(SaveButton, BorderLayout.SOUTH);
-			p.add(LoadButton, BorderLayout.EAST);
-			mainFrame.add(p);
-
-			SaveButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("Saving!!");
-					File f = new File("Saved.txt");
-					if (f.exists()) {
-						f.delete();
-					}
-
-					PrintWriter writer = null;
-					try {
-						writer = new PrintWriter(new File("Saved.txt"));
-					} catch (FileNotFoundException e1) {
-						System.out.println("Error");
-						e1.printStackTrace();
-					}
-
-					for (Integer KarticaValue : karticaValue) {
-						writer.println(KarticaValue);
-					}
-					writer.close();
-				}
-			});
-			
-			LoadButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("I clicked loading buttons");
-					try {
-						System.out.println("Saving!");
-						karticaValue.clear();
-						Scanner vnos = new Scanner(new File("Saved.txt"));
-						String a = vnos.next();
-						ArrayList<Integer> karticaValue = new ArrayList<Integer>();
-						for (int i = 0; i < karticaValue.size(); i++) {
-							System.out.println("Read " + i);
-							karticaValue.add(Integer.parseInt(a));
-						}
-						System.out.println(karticaValue.toString());
-						vnos.close();
-						System.out.println("I clicked loading buttons");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} finally {
-						System.out.println("finally");
-
 						gamePanel.removeAll();
+						cards.clear();
 						for (kartica c : cards) {
 							gamePanel.add(c);
 						}
 						mainFrame.add(gamePanel);
-						mainFrame.revalidate();
-						new Polje(true);
+						mainFrame.repaint();
 					}
 				}
 
 			});
-
 
 			delay = new Timer(200, new ActionListener() {
 				public void actionPerformed(ActionEvent ae) {
@@ -242,12 +145,7 @@ public class Polje extends JFrame {
 			});
 			delay.setRepeats(false);
 
-		} else {
-			System.out.println("Napaka");
-			System.out.println("Napaka");
-			System.out.println("Napaka");
-			System.out.println("Napaka");
-		}
+		} 
 	}
 
 	/**
@@ -295,7 +193,6 @@ public class Polje extends JFrame {
 				JOptionPane.showMessageDialog(this, "Cestitke,zmagali ste!");
 				JOptionPane.showMessageDialog(this, "Ctevilo premikov: " + clickCounter);
 				JOptionPane.showMessageDialog(this, "Vas rezultat je: " + score);
-				SaveFile(karticaValue);
 				System.exit(0);
 			}
 		} else {
@@ -307,10 +204,6 @@ public class Polje extends JFrame {
 		card2 = null;
 	}
 
-	private void SaveFile(ArrayList<Integer> karticaValue2) {
-		// TODO Auto-generated method stub
-
-	}
 
 	/**
 	 * Desc: Metoda preveri vsako kartico, ?e ima svoj par(true). V primeru da je
