@@ -15,7 +15,7 @@ public class kartica extends JButton {
 	 **/
 
 	public void setId(Object value) {
-		this.idKartica = (int) value;
+		this.idKartica =(int) value;
 	}
 
 	/**

@@ -64,7 +64,6 @@ public class Polje extends JFrame {
 			}
 		});
 		delay.setRepeats(false);
-	
 
 		/*Main frame*/
 		JFrame mainFrame = new JFrame();
@@ -73,13 +72,12 @@ public class Polje extends JFrame {
 		mainFrame.setVisible(true);
 		mainFrame.setSize(600, 500);
 		JPanel gamePanel = new JPanel();
-		gamePanel.setLayout(new GridLayout(4,5));
-
-		
+		gamePanel.setLayout(new GridLayout(3,4));
+		mainFrame.add(gamePanel);
 		for (kartica c:cards){
             gamePanel.add(c);
 		}	
-		mainFrame.add(gamePanel);
+
 		Panel p = new Panel();
 	    p.setLayout(new BorderLayout());
 	    JButton SaveButton = new JButton("Save Game");
@@ -114,11 +112,8 @@ public class Polje extends JFrame {
 		LoadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-			        Scanner vnos;
-
-						vnos = new Scanner(new File("Saved.txt"));
-
-			        String a = vnos.nextLine();
+			        Scanner vnos = new Scanner(new File("Saved.txt"));
+			        String a = vnos.next();
 			        for (int i = 0; i <karticaValue.size(); i++) {
 			        	karticaValue.remove(i);
 						karticaValue.add(Integer.parseInt(a));
