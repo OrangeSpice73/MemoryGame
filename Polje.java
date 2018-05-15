@@ -27,7 +27,8 @@ public class Polje extends JFrame {
 	ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 
 
-	Polje(){
+	Polje(boolean load){
+		if(load == false) {
 	
 		String userInput = JOptionPane.showInputDialog("Vpiste poljubno stevilo parov!");
 		int stParov = Integer.parseInt(userInput);
@@ -36,9 +37,9 @@ public class Polje extends JFrame {
 		for (int x = 0; x < stParov; x++) {
 			karticaValue.add(x);
 			karticaValue.add(x);
-		}
+			}
+		Collections.shuffle(karticaValue);	
 
-		Collections.shuffle(karticaValue);
 		System.out.println(karticaValue);
 
 		for (int value : karticaValue) {
@@ -54,19 +55,20 @@ public class Polje extends JFrame {
 		}
 
 		this.cards = seznamKartic;
-
-		delay = new Timer(200, new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				try {
-					cekirajKartice(karticaValue);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		}
+		else {
+			for (int value : karticaValue) {
+				kartica cards = new kartica();
+				cards.setId(value);
+				cards.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent ae) {
+						izbranaKartica = cards;
+						obrniJih();
+					}
+				});
+				seznamKartic.add(cards);
 			}
-		});
-		delay.setRepeats(false);
-		
+		}
 		/*Main frame*/
 		JFrame mainFrame = new JFrame();
 		mainFrame.setTitle("Memory Game");
@@ -77,9 +79,14 @@ public class Polje extends JFrame {
 		gamePanel.setLayout(new GridLayout(3,4));
 		mainFrame.add(gamePanel);
 		
-		for (kartica c:cards){
-            gamePanel.add(c);
-        }
+		if(load == false) {
+			for (kartica c:cards){
+				gamePanel.add(c);
+			}
+		}
+			else {
+				
+			}
 		
 		Panel p = new Panel();
 	    p.setLayout(new BorderLayout());
@@ -91,7 +98,18 @@ public class Polje extends JFrame {
 	    p.add(LoadButton, BorderLayout.EAST);
 	    mainFrame.add(p);
 	    
-	    
+		delay = new Timer(200, new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				try {
+					cekirajKartice(karticaValue);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		delay.setRepeats(false); 
+		
 		SaveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					File f = new File("Saved.txt");
@@ -115,24 +133,21 @@ public class Polje extends JFrame {
 		LoadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			try {
-				System.out.println(karticaValue);
-				for (int i = 0; i <karticaValue.size(); i++) {
-					karticaValue.remove(i);
-				}
-				
+
+					karticaValue.clear();
 			        Scanner vnos = new Scanner(new File("Saved.txt"));
 			        String a = vnos.next();
 			        ArrayList<Integer> karticaValue = new ArrayList<Integer>();
 			        for (int i = 0; i <karticaValue.size(); i++) {
 						karticaValue.add(Integer.parseInt(a));
 					}
+					System.out.println(karticaValue);
 			        vnos.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			finally {
-				new Polje();
+				new Polje(true);
 			}
 			}
 			
